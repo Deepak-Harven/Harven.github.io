@@ -1,15 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
-</head>
-<body>
-    <h1>Welcome to My Website</h1>
-    <img src="assets/weather/thunderstorm.svg">
-    <img src="assets/weather/rain.svg">
-    <img src="assets/weather/sunny.svg">
-    <!-- Add more content and images here, ensuring all <img> tags use relative paths -->
-</body>
-</html>
+const fs = require('fs');
+const path = require('path');
+
+// Edit this if you want to target more/different file types
+const FILE_EXTENSIONS = ['.html', '.js', '.css'];
+
+// The folder pattern to match
+const PATTERN = /(["'(])\/assets\//g; // matches "/assets/ after a quote or parenthesis
+
+// Recursively walk directory and process files
+function walkAndFix(dir) {
+    fs.readdirSync(dir).forEach(file => {
+        const fullPath = path.join(dir, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+            walkAndFix(fullPath);
+        } else if (FILE_EXTENSIONS.includes(path.extname(file))) {
+            let content = fs.readFileSync(fullPath, 'utf8');
+            let newContent = content.replace(PATTERN, '$1assets/');
+            if (content !== newContent) {
+                fs.writeFileSync(fullPath, newContent, 'utf8');
+                console.log(`Fixed: ${fullPath}`);
+            }
+        }
+    });
+}
+
+// Start from the current directory
+walkAndFix(process.cwd());
