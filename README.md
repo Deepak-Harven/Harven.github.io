@@ -1,3 +1,5 @@
+- [assets] (./assets/)
+
 ## HTML (`index.html`)
 
 <!DOCTYPE html>
