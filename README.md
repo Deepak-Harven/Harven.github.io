@@ -1,4 +1,4 @@
-- [assets] (./assets/)
+[assets] (./assets/)
 
 ## HTML (`index.html`)
 
